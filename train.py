@@ -25,7 +25,7 @@ else:
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--seed', type=int, default=1234)
-    parser.add_argument('--backbone', type=str, default="resnet50")
+    parser.add_argument('--backbone', type=str, default="x3d_xs")
     parser.add_argument('--download', type=bool, default=True)
     parser.add_argument('--train_folder', type=str, default=os.path.join(os.getcwd(),
                         "data/kinetics/train"))
@@ -33,7 +33,6 @@ if __name__ == '__main__':
                         "data/kinetics/val"))
     parser.add_argument('--predict_folder', type=str, default=os.path.join(os.getcwd(),
                         "data/kinetics/predict"))
-
     parser.add_argument('--max_epochs', type=int, default=1)
     parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--gpus', type=int, default=None)
@@ -45,7 +44,7 @@ if __name__ == '__main__':
         # Dataset Credit:Download a video clip dataset. 
         # Find more datasets at https://pytorchvideo.readthedocs.io/en/latest/data.html
         download_data("https://pl-flash-data.s3.amazonaws.com/kinetics.zip", 
-                      os.path.join(os.getcwd(), "data/")))
+                      os.path.join(os.getcwd(), "data/"))
 
 
     # 2. Specify transforms to be used during training.
@@ -98,10 +97,10 @@ if __name__ == '__main__':
     # 4. List the available models
     print(VideoClassifier.available_models())
     # out: ['efficient_x3d_s', 'efficient_x3d_xs', ... ,slowfast_r50', 'x3d_m', 'x3d_s', 'x3d_xs']
-    print(VideoClassifier.get_model_details("x3d_xs"))
+    print(VideoClassifier.get_model_details(args.backbone))
 
     # 5. Build the model - `x3d_xs` comes with `nn.Softmax` by default for their `head_activation`.
-    model = VideoClassifier(model="x3d_xs", num_classes=datamodule.num_classes)
+    model = VideoClassifier(model=args.backbone, num_classes=datamodule.num_classes)
     model.serializer = Labels()
 
     # 6. Finetune the model
