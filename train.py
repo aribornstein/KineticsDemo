@@ -6,6 +6,7 @@ from typing import Callable, List
 
 import torch
 from torch.utils.data.sampler import RandomSampler
+import multiprocessing as mproc
 
 import flash
 from flash.core.classification import Labels
@@ -93,6 +94,7 @@ if __name__ == '__main__':
         clip_duration=2,
         video_sampler=RandomSampler,
         decode_audio=False,
+        num_workers=mproc.cpu_count()
     )
 
     # 4. List the available models
