@@ -87,7 +87,7 @@ if __name__ == '__main__':
         val_folder=args.val_folder,
         predict_folder=args.predict_folder,
         train_transform=make_transform(train_post_tensor_transform),
-#         val_transform=make_transform(val_post_tensor_transform),
+        val_transform=make_transform(val_post_tensor_transform),
         predict_transform=make_transform(val_post_tensor_transform),
         batch_size=8,
         clip_sampler="uniform",
