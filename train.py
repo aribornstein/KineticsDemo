@@ -87,7 +87,7 @@ if __name__ == '__main__':
         val_folder=args.val_folder,
         predict_folder=args.predict_folder,
         train_transform=make_transform(train_post_tensor_transform),
-        val_transform=make_transform(val_post_tensor_transform),
+#         val_transform=make_transform(val_post_tensor_transform),
         predict_transform=make_transform(val_post_tensor_transform),
         batch_size=8,
         clip_sampler="uniform",
@@ -98,13 +98,12 @@ if __name__ == '__main__':
     )
 
     # 4. List the available models
-    print(VideoClassifier.available_models())
+    print(VideoClassifier.available_backbones())
     # out: ['efficient_x3d_s', 'efficient_x3d_xs', ... ,slowfast_r50', 'x3d_m', 'x3d_s', 'x3d_xs']
-    print(VideoClassifier.get_model_details(args.backbone))
+    print(VideoClassifier.get_backbone_details("x3d_xs"))
 
-    # 5. Build the model - `x3d_xs` comes with `nn.Softmax` by default for their `head_activation`.
-    model = VideoClassifier(model=args.backbone, num_classes=datamodule.num_classes)
-    model.serializer = Labels()
+    # 5. Build the VideoClassifier with a PyTorchVideo backbone.
+    model = VideoClassifier(args.backbone, num_classes=datamodule.num_classes, serializer=Labels())
 
     # 6. Finetune the model
     trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus)
