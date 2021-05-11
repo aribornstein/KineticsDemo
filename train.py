@@ -87,7 +87,7 @@ if __name__ == '__main__':
         val_folder=args.val_folder,
         predict_folder=args.predict_folder,
         train_transform=make_transform(train_post_tensor_transform),
-        val_transform=make_transform(val_post_tensor_transform),
+#         val_transform=make_transform(val_post_tensor_transform),
         predict_transform=make_transform(val_post_tensor_transform),
         batch_size=8,
         clip_sampler="uniform",
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     model.serializer = Labels()
 
     # 6. Finetune the model
-    trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus, limit_val_batches=0)
+    trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus)
     trainer.finetune(model, datamodule=datamodule, strategy=NoFreeze())
     trainer.save_checkpoint("video_classification.pt")
     
