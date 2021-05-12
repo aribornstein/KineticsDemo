@@ -117,3 +117,5 @@ if __name__ == '__main__':
 
     # 8. Make a prediction
     trainer.save_checkpoint("video_classification.pt")
+
+    print("Finish ! Congratulations, you used Grid Platform to train our fist VideoClassifier !!!")
