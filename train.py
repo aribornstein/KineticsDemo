@@ -105,7 +105,7 @@ if __name__ == '__main__':
     print(VideoClassifier.get_backbone_details("x3d_xs"))
 
     # 5. Build the VideoClassifier with a PyTorchVideo backbone.
-    model = VideoClassifier(backbone=args.backbone, num_classes=datamodule.num_classes, serializer=Labels(), pretrained=False)
+    model = VideoClassifier(backbone=args.backbone, num_classes=datamodule.num_classes, serializer=Labels())
 
     # 6. Finetune the model
     trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus, fast_dev_run=args.fast_dev_run)
