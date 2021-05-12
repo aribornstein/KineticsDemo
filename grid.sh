@@ -5,5 +5,5 @@ grid train \
     --g_instance_type g4dn.xlarge \
     --g_gpus 1 \
     train.py \
-    --gpus 1
+    --gpus 1 \
     --fast_dev_run 1
