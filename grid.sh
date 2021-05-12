@@ -7,4 +7,4 @@ grid train \
     --g_gpus 1 \
     train.py \
     --gpus 1 \
-    --max_epochs 10
+    --max_epochs 3
