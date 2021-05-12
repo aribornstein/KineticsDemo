@@ -18,10 +18,10 @@ from flash.video import VideoClassificationData, VideoClassifier
 if _PYTORCHVIDEO_AVAILABLE and _KORNIA_AVAILABLE:
     import kornia.augmentation as K
     from pytorchvideo.transforms import ApplyTransformToKey, RandomShortSideScale, UniformTemporalSubsample
-    from torchvision.transforms import CenterCrop, Compose, RandomCrop, RandomHorizontalFlip
+    from torchvision.transforms import CenterCrop, Compose, RandomCrop, RandomHorizontalFlip, Normalize
 else:
     print("Please, run `pip install torchvideo kornia`")
-    sys.exit(0)
+    sys.exit(1)
 
 
 if __name__ == '__main__':
@@ -30,22 +30,23 @@ if __name__ == '__main__':
     parser.add_argument('--backbone', type=str, default="x3d_xs")
     parser.add_argument('--download', type=bool, default=True)
     parser.add_argument('--train_folder', type=str, default=os.path.join(os.getcwd(),
-                        "data/kinetics/train"))
+                        "./data/kinetics/train"))
     parser.add_argument('--val_folder', type=str, default=os.path.join(os.getcwd(),
-                        "data/kinetics/val"))
+                        "./data/kinetics/val"))
     parser.add_argument('--predict_folder', type=str, default=os.path.join(os.getcwd(),
-                        "data/kinetics/predict"))
+                        "./data/kinetics/predict"))
     parser.add_argument('--max_epochs', type=int, default=1)
     parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--gpus', type=int, default=None)
+    parser.add_argument('--fast_dev_run', type=int, default=False)
     args = parser.parse_args()
 
 
     # 1. Download the data
     if args.download:
-        # Dataset Credit:Download a video clip dataset. 
+        # Dataset Credit:Download a video clip dataset.
         # Find more datasets at https://pytorchvideo.readthedocs.io/en/latest/data.html
-        download_data("https://pl-flash-data.s3.amazonaws.com/kinetics.zip", 
+        download_data("https://pl-flash-data.s3.amazonaws.com/kinetics.zip",
                       os.path.join(os.getcwd(), "data/"))
 
 
@@ -87,14 +88,15 @@ if __name__ == '__main__':
         val_folder=args.val_folder,
         predict_folder=args.predict_folder,
         train_transform=make_transform(train_post_tensor_transform),
-#         val_transform=make_transform(val_post_tensor_transform),
+        val_transform=make_transform(val_post_tensor_transform),
+        test_transform=make_transform(val_post_tensor_transform),
         predict_transform=make_transform(val_post_tensor_transform),
         batch_size=8,
         clip_sampler="uniform",
         clip_duration=2,
         video_sampler=RandomSampler,
         decode_audio=False,
-        num_workers=8
+        num_workers=0,
     )
 
     # 4. List the available models
@@ -103,13 +105,15 @@ if __name__ == '__main__':
     print(VideoClassifier.get_backbone_details("x3d_xs"))
 
     # 5. Build the VideoClassifier with a PyTorchVideo backbone.
-    model = VideoClassifier(backbone=args.backbone, num_classes=datamodule.num_classes, serializer=Labels())
+    model = VideoClassifier(backbone=args.backbone, num_classes=datamodule.num_classes, serializer=Labels(), pretrained=False)
 
     # 6. Finetune the model
-    trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus)
+    trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus, fast_dev_run=args.fast_dev_run)
     trainer.finetune(model, datamodule=datamodule, strategy=NoFreeze())
-    trainer.save_checkpoint("video_classification.pt")
-    
+
     # 7. Make a prediction
     predictions = model.predict(args.predict_folder)
     print(predictions)
+
+    # 8. Make a prediction
+    trainer.save_checkpoint("video_classification.pt")
