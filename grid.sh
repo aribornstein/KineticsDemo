@@ -6,5 +6,5 @@ grid train \
     --g_instance_type g4dn.xlarge \
     --g_gpus 1 \
     train.py \
-    --gpus 2 \
+    --gpus 1 \
     --max_epochs 10
