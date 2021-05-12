@@ -93,7 +93,7 @@ if __name__ == '__main__':
         predict_transform=make_transform(val_post_tensor_transform),
         batch_size=8,
         clip_sampler="uniform",
-        clip_duration=2,
+        clip_duration=1,
         video_sampler=RandomSampler,
         decode_audio=False,
         num_workers=0,
