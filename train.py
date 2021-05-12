@@ -96,7 +96,7 @@ if __name__ == '__main__':
         clip_duration=2,
         video_sampler=RandomSampler,
         decode_audio=False,
-        num_workers=8,
+        num_workers=0,
     )
 
     # 4. List the available models
