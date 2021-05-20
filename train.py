@@ -39,7 +39,12 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--gpus', type=int, default=None)
     parser.add_argument('--fast_dev_run', type=int, default=False)
+    parser.add_argument('--fast_dev_run', type=bool, default=True)
     args = parser.parse_args()
+    
+    pretrained = args.pretrained
+    if args.gpus < 1:
+        pretrained = False
 
 
     # 1. Download the data
@@ -105,7 +110,7 @@ if __name__ == '__main__':
     print(VideoClassifier.get_backbone_details("x3d_xs"))
 
     # 5. Build the VideoClassifier with a PyTorchVideo backbone.
-    model = VideoClassifier(backbone=args.backbone, num_classes=datamodule.num_classes, serializer=Labels(), pretrained=False)
+    model = VideoClassifier(backbone=args.backbone, num_classes=datamodule.num_classes, serializer=Labels(), pretrained=pretrained)
 
     # 6. Finetune the model
     trainer = flash.Trainer(max_epochs=args.max_epochs, gpus=args.gpus, fast_dev_run=args.fast_dev_run)
