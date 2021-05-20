@@ -39,7 +39,7 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--gpus', type=int, default=None)
     parser.add_argument('--fast_dev_run', type=int, default=False)
-    parser.add_argument('--fast_dev_run', type=bool, default=True)
+    parser.add_argument('--pretrained', type=bool, default=True)
     args = parser.parse_args()
     
     pretrained = args.pretrained
