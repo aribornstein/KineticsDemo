@@ -1,5 +1,4 @@
 torch>=1.8
-lightning-flash[video] >= 0.4.0
-torchvideo == 0.1.0
+lightning-flash[video]>=0.4.0
 kornia>=0.5.1
 nltk!=3.6
