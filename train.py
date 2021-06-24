@@ -1,21 +1,17 @@
 import os
-import sys
 from argparse import ArgumentParser
 from typing import Callable, List
 
-import torch
-from torch.utils.data.sampler import RandomSampler
-
 import flash
-from flash.core.classification import Labels
-from flash.core.finetuning import NoFreeze
-from flash.core.data.utils import download_data
-from flash.video import VideoClassificationData, VideoClassifier
-
 import kornia.augmentation as K
+import torch
+from flash.core.classification import Labels
+from flash.core.data.utils import download_data
+from flash.core.finetuning import NoFreeze
+from flash.video import VideoClassificationData, VideoClassifier
 from pytorchvideo.transforms import ApplyTransformToKey, RandomShortSideScale, UniformTemporalSubsample
+from torch.utils.data.sampler import RandomSampler
 from torchvision.transforms import CenterCrop, Compose, RandomCrop, RandomHorizontalFlip
-
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -30,7 +26,7 @@ if __name__ == '__main__':
                         "./data/kinetics/predict"))
     parser.add_argument('--max_epochs', type=int, default=1)
     parser.add_argument('--learning_rate', type=float, default=1e-3)
-    parser.add_argument('--gpus', type=int, default=None)
+    parser.add_argument('--gpus', type=int, default=0)
     parser.add_argument('--fast_dev_run', type=int, default=False)
     parser.add_argument('--pretrained', type=bool, default=True)
     args = parser.parse_args()
